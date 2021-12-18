@@ -29,7 +29,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         )
 
         return user
-        
+
     def update(self, instance, validated_data):
         """Handle updating user account"""
         if 'password' in validated_data:
@@ -37,3 +37,15 @@ class UserProfileSerializer(serializers.ModelSerializer):
             instance.set_password(password)
 
         return super().update(instance, validated_data)
+
+class ProfileFeedItemSerializer(serializers.ModelSerializer):
+    """Serializes profile feed items"""
+
+    class Meta:
+        model = models.ProfileFeedItem
+        fields = ('id', 'user_profile', 'status_text', 'created_on')
+        #id field is created automatically and is set to read read_only
+        #created on is automatically read read_only
+        #we only want the status text writable
+        extra_kwargs = {'user_profile': {'read_only': True}}
+        #we have to explicitly set user profile to read only
